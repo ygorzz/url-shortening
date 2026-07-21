@@ -12,9 +12,15 @@ export async function createShortUrl(originalUrl) {
 }
 
 export async function findOriginalUrl(shortUrl) {
-    const urlDatas = await url.findOneAndUpdate({ shortUrl }, { $inc: { accessCount: 1 } }, { returnDocument: "after" })
-    if (!urlDatas) {
+    const urlData = await url.findOneAndUpdate(
+        { shortUrl },
+        { $inc: { accessCount: 1 } },
+        { returnDocument: "after" }
+    ).select("originalUrl -_id") // Seleciona apenas originalUrl, menos o _id que vem junto por padrão
+    
+    if (!urlData) {
         throw new Error("URL inválida");
     }
-    return urlDatas.originalUrl;
+
+    return urlData.originalUrl;
 }
