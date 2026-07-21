@@ -3,7 +3,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    container_name: url-shortening-service
+    container_name: url-shortener-service
     ports:
       - 8000:8000
     restart: unless-stopped
@@ -11,3 +11,4 @@ services:
       - .:/app
     environment:
       - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+    command: npm run dev
