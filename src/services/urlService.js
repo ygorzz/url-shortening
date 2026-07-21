@@ -34,3 +34,13 @@ export async function findUrlStats(shortUrl) {
 
     return urlStats;
 }
+
+export async function deleteShortUrl(shortUrl) {
+    const deletedUrl = await url.findOneAndDelete({shortUrl});
+    
+    if(!deletedUrl){
+        throw new Error("URL inválida")
+    }
+
+    return deletedUrl;
+} 

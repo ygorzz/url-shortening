@@ -7,6 +7,6 @@ routes
     .post("/", UrlController.createShortUrl)
     .get("/redirect/:shortUrl", UrlController.redirectShortUrl)
     .get("/stats/:shortUrl", UrlController.findUrlStats)
+    .delete("/:shortUrl", UrlController.deleteShortUrl)
 
-
-export default routes;
+export default routes;  

@@ -4,7 +4,7 @@ export default class UrlController{
         try {
             const { originalUrl } = req.body;
             const shortUrl = await urlService.createShortUrl(originalUrl);
-            res.status(201).json(shortUrl);
+            res.status(201).json({message: "URL criada com sucesso", shortUrl});
         } catch (error) {
             next(error);
         }
@@ -25,6 +25,16 @@ export default class UrlController{
             const {shortUrl} = req.params;
             const urlStats = await urlService.findUrlStats(shortUrl);
             res.status(200).json(urlStats);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async deleteShortUrl(req, res, next) {
+        try {
+            const {shortUrl} = req.params;
+            const deletedUrl = await urlService.deleteShortUrl(shortUrl);
+            res.status(200).json({message: "URL removida com sucesso", deletedUrl})
         } catch (error) {
             next(error);
         }
