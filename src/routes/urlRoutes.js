@@ -5,7 +5,8 @@ const routes = express.Router();
 
 routes
     .post("/", UrlController.createShortUrl)
-    .get("/redirect/:shortUrl", UrlController.redirectUrl)
+    .get("/redirect/:shortUrl", UrlController.redirectShortUrl)
+    .get("/stats/:shortUrl", UrlController.findUrlStats)
 
 
 export default routes;

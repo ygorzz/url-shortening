@@ -10,11 +10,21 @@ export default class UrlController{
         }
     }
 
-    static async redirectUrl(req, res, next){
+    static async redirectShortUrl(req, res, next){
         try{
             const { shortUrl } = req.params;
             const originalUrl = await urlService.findOriginalUrl(shortUrl)
             res.redirect(301, `${originalUrl}`);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async findUrlStats(req, res, next) {
+        try {
+            const {shortUrl} = req.params;
+            const urlStats = await urlService.findUrlStats(shortUrl);
+            res.status(200).json(urlStats);
         } catch (error) {
             next(error);
         }
