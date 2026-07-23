@@ -9,4 +9,4 @@ routes
     .get("/stats/:shortUrl", UrlController.findUrlStats)
     .delete("/:shortUrl", UrlController.deleteShortUrl)
 
-export default routes;  
+export default routes;

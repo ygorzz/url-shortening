@@ -4,7 +4,7 @@ export default class UrlController{
         try {
             const { originalUrl } = req.body;
             const shortUrl = await urlService.createShortUrl(originalUrl);
-            res.status(201).json({message: "URL criada com sucesso", shortUrl});
+            res.status(201).json({message: "URL encurtada com sucesso. Será expirada após 24 horas", shortUrl});
         } catch (error) {
             next(error);
         }

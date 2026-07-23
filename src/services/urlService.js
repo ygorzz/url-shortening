@@ -1,5 +1,6 @@
 import url from "../models/Url.js"
 import generateShortUrl from "../helpers/generateShortUrl.js"
+import urlIsExpired from "../helpers/urlIsExpired.js";
 
 export async function createShortUrl(originalUrl) {
     const shortUrl = generateShortUrl()
@@ -12,17 +13,21 @@ export async function createShortUrl(originalUrl) {
 }
 
 export async function findOriginalUrl(shortUrl) {
-    const urlData = await url.findOneAndUpdate(
+    const urlDatas = await url.findOneAndUpdate(
         { shortUrl },
         { $inc: { accessCount: 1 } },
         { returnDocument: "after" }
-    ).select("originalUrl -_id") // Seleciona apenas originalUrl, menos o _id que vem junto por padrão
+    ).select("originalUrl expiresAt createdAt -_id") // Seleciona apenas originalUrl, menos o _id que vem junto por padrão
 
-    if (!urlData) {
+    if (!urlDatas) {
         throw new Error("URL inválida");
     }
 
-    return urlData.originalUrl;
+    if(urlIsExpired(urlDatas)){
+        throw new Error("Url expirada");
+    }
+
+    return urlDatas.originalUrl;
 }
 
 export async function findUrlStats(shortUrl) {
