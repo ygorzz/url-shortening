@@ -1,17 +1,37 @@
 import * as urlService from "../services/urlService.js"
-export default class UrlController{
-    static async createShortUrl (req, res, next) {
+export default class UrlController {
+    static async createShortUrl(req, res, next) {
         try {
             const { originalUrl } = req.body;
             const shortUrl = await urlService.createShortUrl(originalUrl);
-            res.status(201).json({message: "URL encurtada com sucesso. Será expirada após 24 horas", shortUrl});
+            res.status(201).json({ message: "URL encurtada com sucesso. Será expirada após 24 horas", shortUrl });
         } catch (error) {
             next(error);
         }
     }
 
-    static async redirectShortUrl(req, res, next){
-        try{
+    static async findAllShortUrls(req, res, next) {
+        try {
+            // pegar o id do user futuramente
+            const urls = await urlService.findAllShortUrls();
+            res.status(200).json(urls);
+        } catch (error) {
+            next(error);
+        }
+    }
+    
+    static async findShortUrlStats(req, res, next) {
+        try {
+            const { shortUrl } = req.params;
+            const urlStats = await urlService.findShortUrlStats(shortUrl);
+            res.status(200).json(urlStats);
+        } catch (error) {
+            next(error);
+        }
+    }
+    
+    static async redirectShortUrl(req, res, next) {
+        try {
             const { shortUrl } = req.params;
             const originalUrl = await urlService.findOriginalUrl(shortUrl)
             res.redirect(301, `${originalUrl}`);
@@ -20,21 +40,12 @@ export default class UrlController{
         }
     }
 
-    static async findShortUrlStats(req, res, next) {
-        try {
-            const {shortUrl} = req.params;
-            const urlStats = await urlService.findShortUrlStats(shortUrl);
-            res.status(200).json(urlStats);
-        } catch (error) {
-            next(error);
-        }
-    }
 
     static async deleteShortUrl(req, res, next) {
         try {
-            const {shortUrl} = req.params;
+            const { shortUrl } = req.params;
             const deletedUrl = await urlService.deleteShortUrl(shortUrl);
-            res.status(200).json({message: "URL removida com sucesso", deletedUrl})
+            res.status(200).json({ message: "URL removida com sucesso", deletedUrl })
         } catch (error) {
             next(error);
         }
@@ -42,11 +53,12 @@ export default class UrlController{
 
     static async renewShortUrl(req, res, next) {
         try {
-            const {shortUrl} = req.params;
+            const { shortUrl } = req.params;
             const updatedUrl = await urlService.renewShortUrl(shortUrl);
             res.status(200).json(updatedUrl);
         } catch (error) {
             next(error);
         }
     }
+
 }

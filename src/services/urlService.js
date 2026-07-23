@@ -12,6 +12,20 @@ export async function createShortUrl(originalUrl) {
     return createdUrl;
 }
 
+export async function findAllShortUrls(){
+    const urls = await url.find();
+
+    return urls;
+}
+
+export async function findShortUrlStats(shortUrl) {
+    const urlStats = await url.findOne({shortUrl})
+
+    if(!urlStats) throw new Error("URL inválida")
+
+    return urlStats;
+}
+
 export async function findOriginalUrl(shortUrl) {
     const urlDatas = await url.findOneAndUpdate(
         { shortUrl },
@@ -23,14 +37,6 @@ export async function findOriginalUrl(shortUrl) {
     if(urlIsExpired(urlDatas)) throw new Error("Url expirada");
 
     return urlDatas.originalUrl;
-}
-
-export async function findShortUrlStats(shortUrl) {
-    const urlStats = await url.findOne({shortUrl})
-
-    if(!urlStats) throw new Error("URL inválida")
-
-    return urlStats;
 }
 
 export async function deleteShortUrl(shortUrl) {
