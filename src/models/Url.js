@@ -7,7 +7,7 @@ const UrlSchema = new mongoose.Schema({
     originalUrl: { type: String, required: true },
     shortUrl: { type: String, required: true, unique: true },
     accessCount: { type: Number, default: 0 },
-    expiresAt: { type: Number, default: oneDayInMs },
+    expiresAtMs: { type: Number, default: oneDayInMs },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() }
 }, { versionKey: false });

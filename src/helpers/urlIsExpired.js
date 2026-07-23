@@ -1,5 +1,5 @@
-    export default function urlIsExpired({expiresAt, createdAt}) {
-    const createdAtMs = createdAt.getTime();
+export default function urlIsExpired({expiresAtMs, updatedAt}) {
+    const updatedAtMs = updatedAt.getTime();
 
-    return Date.now() - createdAtMs >= expiresAt;
+    return Date.now() - updatedAtMs >= expiresAtMs;
 }
