@@ -17,25 +17,18 @@ export async function findOriginalUrl(shortUrl) {
         { shortUrl },
         { $inc: { accessCount: 1 } },
         { returnDocument: "after" }
-    ).select("originalUrl expiresAt createdAt -_id") // Seleciona apenas originalUrl, menos o _id que vem junto por padrão
+    ).select("originalUrl expiresAtMs updatedAt -_id") // Selects only these fields, excluding the _id that comes by default
 
-    if (!urlDatas) {
-        throw new Error("URL inválida");
-    }
-
-    if(urlIsExpired(urlDatas)){
-        throw new Error("Url expirada");
-    }
+    if (!urlDatas) throw new Error("URL inválida");
+    if(urlIsExpired(urlDatas)) throw new Error("Url expirada");
 
     return urlDatas.originalUrl;
 }
 
-export async function findUrlStats(shortUrl) {
+export async function findShortUrlStats(shortUrl) {
     const urlStats = await url.findOne({shortUrl})
 
-    if(!urlStats) {
-        throw new Error("URL inválida")
-    }
+    if(!urlStats) throw new Error("URL inválida")
 
     return urlStats;
 }
@@ -43,9 +36,19 @@ export async function findUrlStats(shortUrl) {
 export async function deleteShortUrl(shortUrl) {
     const deletedUrl = await url.findOneAndDelete({shortUrl});
     
-    if(!deletedUrl){
-        throw new Error("URL inválida")
-    }
+    if(!deletedUrl) throw new Error("URL inválida")
 
     return deletedUrl;
 } 
+
+export async function renewShortUrl(shortUrl) {
+    const updatedUrl = await url.findOneAndUpdate(
+        {shortUrl},
+        {updatedAt: Date.now()},
+        {returnDocument: "after"}
+    );
+
+    if(!updatedUrl) throw new Error("Url inválida");
+
+    return updatedUrl;
+}

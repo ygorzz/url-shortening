@@ -20,10 +20,10 @@ export default class UrlController{
         }
     }
 
-    static async findUrlStats(req, res, next) {
+    static async findShortUrlStats(req, res, next) {
         try {
             const {shortUrl} = req.params;
-            const urlStats = await urlService.findUrlStats(shortUrl);
+            const urlStats = await urlService.findShortUrlStats(shortUrl);
             res.status(200).json(urlStats);
         } catch (error) {
             next(error);
@@ -35,6 +35,16 @@ export default class UrlController{
             const {shortUrl} = req.params;
             const deletedUrl = await urlService.deleteShortUrl(shortUrl);
             res.status(200).json({message: "URL removida com sucesso", deletedUrl})
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async renewShortUrl(req, res, next) {
+        try {
+            const {shortUrl} = req.params;
+            const updatedUrl = await urlService.renewShortUrl(shortUrl);
+            res.status(200).json(updatedUrl);
         } catch (error) {
             next(error);
         }
