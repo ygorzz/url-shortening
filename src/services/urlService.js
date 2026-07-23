@@ -1,6 +1,7 @@
 import url from "../models/Url.js"
 import generateShortUrl from "../helpers/generateShortUrl.js"
 import urlIsExpired from "../helpers/urlIsExpired.js";
+import NotFoundError from "../errors/NotFoundError.js";
 
 export async function createShortUrl(originalUrl) {
     const shortUrl = generateShortUrl()
@@ -21,7 +22,7 @@ export async function findAllShortUrls(){
 export async function findShortUrlStats(shortUrl) {
     const urlStats = await url.findOne({shortUrl})
 
-    if(!urlStats) throw new Error("URL inválida")
+    if(!urlStats) throw new NotFoundError("URL não encontrada")
 
     return urlStats;
 }
@@ -33,7 +34,7 @@ export async function findOriginalUrl(shortUrl) {
         { returnDocument: "after" }
     ).select("originalUrl expiresAtMs updatedAt -_id") // Selects only these fields, excluding the _id that comes by default
 
-    if (!urlDatas) throw new Error("URL inválida");
+    if (!urlDatas) throw new NotFoundError("URL não encontrada");
     if(urlIsExpired(urlDatas)) throw new Error("Url expirada");
 
     return urlDatas.originalUrl;
@@ -42,7 +43,7 @@ export async function findOriginalUrl(shortUrl) {
 export async function deleteShortUrl(shortUrl) {
     const deletedUrl = await url.findOneAndDelete({shortUrl});
     
-    if(!deletedUrl) throw new Error("URL inválida")
+    if(!deletedUrl) throw new NotFoundError("URL não encontrada");
 
     return deletedUrl;
 } 
@@ -54,7 +55,7 @@ export async function renewShortUrl(shortUrl) {
         {returnDocument: "after"}
     );
 
-    if(!updatedUrl) throw new Error("Url inválida");
+    if(!updatedUrl) throw new NotFoundError("Url não encontrada");
 
     return updatedUrl;
 }

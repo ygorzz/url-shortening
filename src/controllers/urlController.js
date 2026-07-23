@@ -29,7 +29,7 @@ export default class UrlController {
             next(error);
         }
     }
-    
+
     static async redirectShortUrl(req, res, next) {
         try {
             const { shortUrl } = req.params;
